@@ -2,8 +2,24 @@
 //
 
 #include <iostream>
+#include "graph.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    auto dimension = 0;
+    std::cin >> dimension;
+    graph g(dimension);
+    for (auto row = 0; row < dimension; row++)
+    {
+        for (auto column = 0; column < dimension; column++)
+        {
+            auto edge_present = 0;
+            std::cin >> edge_present;
+            if (edge_present)
+            {
+                g.add_edge(row, column);
+            }
+        }
+    }
+    std::cout << g;
 }

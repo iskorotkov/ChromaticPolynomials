@@ -23,4 +23,8 @@ public:
 
 private:
 	std::vector<std::vector<bool>> vertices_data_;
+
+	void remove_vertex(int v);
 };
+
+std::ostream& operator<<(std::ostream& s, const graph& g);

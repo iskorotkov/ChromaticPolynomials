@@ -1,11 +1,12 @@
 #include "graph.h"
 #include <cassert>
 #include <algorithm>
+#include <ostream>
 
 graph::graph(const int vertices)
 {
 	vertices_data_.resize(vertices);
-	std::for_each(vertices_data_.begin(), vertices_data_.end(), [vertices](auto v) { v.resize(vertices, false); });
+	std::for_each(vertices_data_.begin(), vertices_data_.end(), [vertices](auto & v) { v.resize(vertices, false); });
 }
 
 void graph::add_edge(const int v1, const int v2)
@@ -15,6 +16,12 @@ void graph::add_edge(const int v1, const int v2)
 
 	vertices_data_[v1][v2] = true;
 	vertices_data_[v2][v1] = true;
+}
+
+void graph::merge_vertices(const int v1, const int v2)
+{
+	// TODO: merge vertex
+	remove_vertex(v2);
 }
 
 int graph::count_vertices() const
@@ -32,4 +39,19 @@ bool graph::has_edge(const int v1, const int v2) const
 bool graph::has_vertex(const int v1) const
 {
 	return v1 >= 0 && v1 <= count_vertices();
+}
+
+std::ostream& operator<<(std::ostream& s, const graph& g)
+{
+	s << "Graph: " << std::endl;
+	const auto vertices = g.count_vertices();
+	for (auto row = 0; row < vertices; row++)
+	{
+		for (auto column = 0; column < vertices; column++)
+		{
+			s << g.has_edge(row, column) << " ";
+		}
+		s << std::endl;
+	}
+	return s;
 }
