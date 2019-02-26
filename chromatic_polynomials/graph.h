@@ -7,8 +7,8 @@ class graph
 public:
 	explicit graph(int vertices);
 
-	void add_edge(int v1, int v2);
-	void merge_vertices(int v1, int v2);
+	void add_edge(int vertex1, int vertex2);
+	void merge_vertices(int vertex1, int vertex2);
 
 	expression calculate_chromatic_polynomial() const;
 
@@ -18,13 +18,13 @@ public:
 	bool is_complete() const;
 	bool is_tree() const;
 	bool has_edges() const;
-	bool has_edge(int v1, int v2) const;
-	bool has_vertex(int v1) const;
+	bool has_edge(int vertex1, int vertex2) const;
+	bool has_vertex(int vertex) const;
 
 private:
 	std::vector<std::vector<bool>> vertices_data_;
 
-	void remove_vertex(int v);
+	void remove_vertex(int vertex);
 };
 
-std::ostream& operator<<(std::ostream& s, const graph& g);
+std::ostream& operator<<(std::ostream& stream, const graph& g);

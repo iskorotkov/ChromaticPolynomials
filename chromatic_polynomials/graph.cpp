@@ -6,22 +6,31 @@
 graph::graph(const int vertices)
 {
 	vertices_data_.resize(vertices);
-	std::for_each(vertices_data_.begin(), vertices_data_.end(), [vertices](auto & v) { v.resize(vertices, false); });
+	std::for_each(vertices_data_.begin(), vertices_data_.end(), [vertices](auto & vec) { vec.resize(vertices, false); });
 }
 
-void graph::add_edge(const int v1, const int v2)
+void graph::add_edge(const int vertex1, const int vertex2)
 {
-	assert(has_vertex(v1));
-	assert(has_vertex(v2));
+	assert(has_vertex(vertex1));
+	assert(has_vertex(vertex2));
 
-	vertices_data_[v1][v2] = true;
-	vertices_data_[v2][v1] = true;
+	vertices_data_[vertex1][vertex2] = true;
+	vertices_data_[vertex2][vertex1] = true;
 }
 
-void graph::merge_vertices(const int v1, const int v2)
+void graph::merge_vertices(const int vertex1, const int vertex2)
 {
-	// TODO: merge vertex
-	remove_vertex(v2);
+	for (auto vertex = 0, vertices = count_vertices(); vertex < vertices; vertex++)
+	{
+		if (vertex != vertex1 && vertex != vertex2)
+		{
+			if (has_edge(vertex1, vertex) || has_edge(vertex2, vertex))
+			{
+				add_edge(vertex1, vertex);
+			}
+		}
+	}
+	remove_vertex(vertex2);
 }
 
 int graph::count_vertices() const
@@ -29,29 +38,34 @@ int graph::count_vertices() const
 	return vertices_data_.size();
 }
 
-bool graph::has_edge(const int v1, const int v2) const
+bool graph::has_edge(const int vertex1, const int vertex2) const
 {
-	return has_vertex(v1)
-		&& has_vertex(v2)
-		&& vertices_data_[v1][v2];
+	return has_vertex(vertex1)
+		&& has_vertex(vertex2)
+		&& vertices_data_[vertex1][vertex2];
 }
 
-bool graph::has_vertex(const int v1) const
+bool graph::has_vertex(const int vertex) const
 {
-	return v1 >= 0 && v1 <= count_vertices();
+	return vertex >= 0 && vertex <= count_vertices();
 }
 
-std::ostream& operator<<(std::ostream& s, const graph& g)
+void graph::remove_vertex(int vertex)
 {
-	s << "Graph: " << std::endl;
-	const auto vertices = g.count_vertices();
-	for (auto row = 0; row < vertices; row++)
+	vertices_data_.erase(vertices_data_.begin() + vertex);
+	std::for_each(vertices_data_.begin(), vertices_data_.end(), [vertex](auto & vec) { vec.erase(vec.begin() + vertex); });
+}
+
+std::ostream & operator<<(std::ostream & stream, const graph & g)
+{
+	stream << "Graph: " << std::endl;
+	for (auto row = 0, vertices = g.count_vertices(); row < vertices; row++)
 	{
 		for (auto column = 0; column < vertices; column++)
 		{
-			s << g.has_edge(row, column) << " ";
+			stream << g.has_edge(row, column) << " ";
 		}
-		s << std::endl;
+		stream << std::endl;
 	}
-	return s;
+	return stream;
 }

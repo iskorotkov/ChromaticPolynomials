@@ -22,4 +22,6 @@ int main()
         }
     }
     std::cout << g;
+    g.merge_vertices(1, 2);
+    std::cout << g;
 }
