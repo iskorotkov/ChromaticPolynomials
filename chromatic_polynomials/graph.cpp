@@ -128,16 +128,19 @@ bool graph::is_tree_impl(std::vector<bool> & vertices_reached, int current_verte
 graph graph::create_g_plus(int vertex1, int vertex2) const
 {
 	// TODO: implement
+	return graph(0);
 }
 
 graph graph::create_g_minus(int vertex1, int vertex2) const
 {
 	// TODO: implement
+	return graph(0);
 }
 
 std::pair<int, int> graph::get_two_unrelated_vertices() const
 {
 	// TODO: implement
+	return std::make_pair<int, int>(0, 0);
 }
 
 void graph::calculate_chromatic_polynomial_impl(expression & expr) const
