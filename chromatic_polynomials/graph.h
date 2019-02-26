@@ -25,6 +25,8 @@ private:
 	std::vector<std::vector<bool>> vertices_data_;
 
 	void remove_vertex(int vertex);
+
+	bool is_tree_impl(std::vector<bool>& vertices_reached, int current_vertex) const;
 };
 
 std::ostream& operator<<(std::ostream& stream, const graph& g);

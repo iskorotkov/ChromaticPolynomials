@@ -38,6 +38,51 @@ int graph::count_vertices() const
 	return vertices_data_.size();
 }
 
+int graph::count_edges() const
+{
+	auto edges = 0;
+	for (auto row = 0, vertices = count_vertices(); row < vertices; row++)
+	{
+		for (auto column = row + 1; column < vertices; column++)
+		{
+			if (has_edge(row, column))
+			{
+				++edges;
+			}
+		}
+	}
+	return edges;
+}
+
+bool graph::is_complete() const
+{
+	const auto vertices = count_vertices();
+	const auto edges = count_edges();
+	return vertices * (vertices - 1) / 2 == edges;
+}
+
+bool graph::is_tree() const
+{
+	const auto first_vertex = 0;
+	std::vector<bool> vertices_reached(count_vertices());
+	return is_tree_impl(vertices_reached, first_vertex);
+}
+
+bool graph::has_edges() const
+{
+	for (const auto& vec : vertices_data_)
+	{
+		for (const auto& val : vec)
+		{
+			if (val)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 bool graph::has_edge(const int vertex1, const int vertex2) const
 {
 	return has_vertex(vertex1)
@@ -56,7 +101,24 @@ void graph::remove_vertex(int vertex)
 	std::for_each(vertices_data_.begin(), vertices_data_.end(), [vertex](auto & vec) { vec.erase(vec.begin() + vertex); });
 }
 
-std::ostream & operator<<(std::ostream & stream, const graph & g)
+bool graph::is_tree_impl(std::vector<bool> & vertices_reached, int current_vertex) const
+{
+	if (vertices_reached[current_vertex])
+	{
+		return false;
+	}
+	vertices_reached[current_vertex] = true;
+	for (auto vertex = current_vertex + 1, vertices = count_vertices(); vertex < vertices; vertex++)
+	{
+		if (has_edge(current_vertex, vertex) && !is_tree_impl(vertices_reached, vertex))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+std::ostream& operator<<(std::ostream & stream, const graph & g)
 {
 	stream << "Graph: " << std::endl;
 	for (auto row = 0, vertices = g.count_vertices(); row < vertices; row++)
