@@ -23,5 +23,4 @@ public:
 
 private:
 	std::vector<std::vector<bool>> vertices_data_;
-	int vertices_amount_;
 };
