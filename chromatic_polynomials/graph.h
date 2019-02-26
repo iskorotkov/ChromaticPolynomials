@@ -1,7 +1,6 @@
 #pragma once
-#include <set>
-#include <map>
 #include "expression.h"
+#include <vector>
 
 class graph
 {
@@ -23,6 +22,6 @@ public:
 	bool has_vertex(int v1) const;
 
 private:
-	std::map<int, std::set<int>> vertices_data_;
+	std::vector<std::vector<bool>> vertices_data_;
 	int vertices_amount_;
 };

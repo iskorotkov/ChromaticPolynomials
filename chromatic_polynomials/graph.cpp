@@ -11,8 +11,8 @@ void graph::add_edge(int v1, int v2)
 	assert(has_vertex(v1));
 	assert(has_vertex(v2));
 
-	vertices_data_[v1].emplace(v2);
-	vertices_data_[v2].emplace(v1);
+	vertices_data_[v1][v2] = true;
+	vertices_data_[v2][v1] = true;
 }
 
 int graph::count_vertices() const
@@ -24,7 +24,7 @@ bool graph::has_edge(const int v1, const int v2) const
 {
 	return has_vertex(v1)
 		&& has_vertex(v2)
-		&& vertices_data_.at(v1).find(v2) != vertices_data_.at(v1).end;
+		&& vertices_data_[v1][v2];
 }
 
 bool graph::has_vertex(const int v1) const
