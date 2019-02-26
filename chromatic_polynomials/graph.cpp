@@ -127,20 +127,31 @@ bool graph::is_tree_impl(std::vector<bool> & vertices_reached, int current_verte
 
 graph graph::create_g_plus(int vertex1, int vertex2) const
 {
-	// TODO: implement
-	return graph(0);
+	graph g = *this;
+	g.add_edge(vertex1, vertex2);
+	return g;
 }
 
 graph graph::create_g_minus(int vertex1, int vertex2) const
 {
-	// TODO: implement
-	return graph(0);
+	graph g = *this;
+	g.merge_vertices(vertex1, vertex2);
+	return g;
 }
 
 std::pair<int, int> graph::get_two_unrelated_vertices() const
 {
-	// TODO: implement
-	return std::make_pair<int, int>(0, 0);
+	for (auto row = 0, vertices = count_vertices(); row < vertices; row++)
+	{
+		for (auto column = row + 1; column < vertices; column++)
+		{
+			if (!has_edge(row, column))
+			{
+				return std::make_pair(row, column);
+			}
+		}
+	}
+	throw std::logic_error("There is no unrelated vertices");
 }
 
 void graph::calculate_chromatic_polynomial_impl(expression & expr) const
