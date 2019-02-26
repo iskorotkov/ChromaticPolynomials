@@ -33,6 +33,13 @@ void graph::merge_vertices(const int vertex1, const int vertex2)
 	remove_vertex(vertex2);
 }
 
+expression graph::calculate_chromatic_polynomial() const
+{
+	expression expr;
+	calculate_chromatic_polynomial_impl(expr);
+	return expr;
+}
+
 int graph::count_vertices() const
 {
 	return vertices_data_.size();
@@ -116,6 +123,46 @@ bool graph::is_tree_impl(std::vector<bool> & vertices_reached, int current_verte
 		}
 	}
 	return true;
+}
+
+graph graph::create_g_plus(int vertex1, int vertex2) const
+{
+	// TODO: implement
+}
+
+graph graph::create_g_minus(int vertex1, int vertex2) const
+{
+	// TODO: implement
+}
+
+std::pair<int, int> graph::get_two_unrelated_vertices() const
+{
+	// TODO: implement
+}
+
+void graph::calculate_chromatic_polynomial_impl(expression & expr) const
+{
+	if (is_tree())
+	{
+		expr.multiply(0);
+		expr.multiply(-1, count_vertices() - 1);
+	}
+	else if (is_complete())
+	{
+		expr.multiply_by_factorial(-count_vertices() + 1, 0);
+	}
+	else if (!has_edges())
+	{
+		expr.multiply(0, count_vertices());
+	}
+	else
+	{
+		const auto [first, second] = get_two_unrelated_vertices();
+		auto g_minus = create_g_minus(first, second);
+		auto g_plus = create_g_plus(first, second);
+		g_minus.calculate_chromatic_polynomial_impl(expr);
+		g_plus.calculate_chromatic_polynomial_impl(expr);
+	}
 }
 
 std::ostream& operator<<(std::ostream & stream, const graph & g)

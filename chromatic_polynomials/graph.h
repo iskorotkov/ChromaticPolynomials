@@ -26,7 +26,14 @@ private:
 
 	void remove_vertex(int vertex);
 
+	void calculate_chromatic_polynomial_impl(expression& expr) const;
+
 	bool is_tree_impl(std::vector<bool>& vertices_reached, int current_vertex) const;
+
+	graph create_g_plus(int vertex1, int vertex2) const;
+	graph create_g_minus(int vertex1, int vertex2) const;
+
+	std::pair<int, int> get_two_unrelated_vertices() const;
 };
 
 std::ostream& operator<<(std::ostream& stream, const graph& g);

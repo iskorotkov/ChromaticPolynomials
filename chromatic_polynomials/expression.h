@@ -4,10 +4,10 @@
 class expression
 {
 public:
-	bool add_multiplier(int multiplier);
+	void multiply(int multiplier, int power = 1);
+	void multiply_by_factorial(int min_multiplier, int max_multiplier);
 
 	int evaluate(int x) const;
 
 private:
-	std::string expr_;
 };
