@@ -11,3 +11,5 @@ public:
 
 private:
 };
+
+expression operator+(const expression& lhs, const expression& rhs);

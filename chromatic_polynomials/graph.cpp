@@ -36,7 +36,27 @@ void graph::merge_vertices(const int vertex1, const int vertex2)
 expression graph::calculate_chromatic_polynomial() const
 {
 	expression expr;
-	calculate_chromatic_polynomial_impl(expr);
+	if (is_tree())
+	{
+		expr.multiply(0);
+		expr.multiply(-1, count_vertices() - 1);
+	}
+	else if (is_complete())
+	{
+		expr.multiply_by_factorial(-count_vertices() + 1, 0);
+	}
+	else if (!has_edges())
+	{
+		expr.multiply(0, count_vertices());
+	}
+	else
+	{
+		const auto [first, second] = get_two_unrelated_vertices();
+		// TODO: avoid copying adjustment matrix twice - copy only once and reuse this graph for second call
+		auto g_minus = create_g_minus(first, second);
+		auto g_plus = create_g_plus(first, second);
+		expr = g_minus.calculate_chromatic_polynomial() + g_plus.calculate_chromatic_polynomial();
+	}
 	return expr;
 }
 
@@ -152,31 +172,6 @@ std::pair<int, int> graph::get_two_unrelated_vertices() const
 		}
 	}
 	throw std::logic_error("There is no unrelated vertices");
-}
-
-void graph::calculate_chromatic_polynomial_impl(expression & expr) const
-{
-	if (is_tree())
-	{
-		expr.multiply(0);
-		expr.multiply(-1, count_vertices() - 1);
-	}
-	else if (is_complete())
-	{
-		expr.multiply_by_factorial(-count_vertices() + 1, 0);
-	}
-	else if (!has_edges())
-	{
-		expr.multiply(0, count_vertices());
-	}
-	else
-	{
-		const auto [first, second] = get_two_unrelated_vertices();
-		auto g_minus = create_g_minus(first, second);
-		auto g_plus = create_g_plus(first, second);
-		g_minus.calculate_chromatic_polynomial_impl(expr);
-		g_plus.calculate_chromatic_polynomial_impl(expr);
-	}
 }
 
 std::ostream& operator<<(std::ostream & stream, const graph & g)
