@@ -1,61 +1,71 @@
 #include "expression.h"
 
-void expression::add_complete(int vertices)
+void expression::add_complete(const int vertices)
 {
 	graph_data g = { graph_type::complete, vertices };
-	++sum[g];
+	++sum_[g];
 }
 
-void expression::add_tree(int vertices)
+void expression::add_tree(const int vertices)
 {
 	graph_data g = { graph_type::tree, vertices };
-	++sum[g];
+	++sum_[g];
 }
 
 void expression::add_empty(int vertices)
 {
 	graph_data g = { graph_type::empty, vertices };
-	++sum[g];
+	++sum_[g];
 }
 
-int expression::evaluate(int x) const
+int expression::evaluate(const int x) const
 {
+	// TODO: check for x that is less than chromatic number of the graph
 	auto result = 0;
-	for (const auto& gd : sum)
+	for (const auto& gd : sum_)
 	{
+		auto accumulator = 1;
 		switch (gd.first.type)
 		{
 		case graph_type::complete:
-			auto accum = 1;
+			// TODO: use factorial function
 			for (auto i = 0; i < gd.first.vertices; i++)
 			{
-				accum *= x - i;
+				accumulator *= x - i;
 			}
-			result += accum;
+			result += accumulator;
 			break;
+		case graph_type::empty:
+			result += static_cast<int>(std::pow(x, gd.first.vertices));
+			break;
+		case graph_type::tree:
+			result += x * static_cast<int>(std::pow(x - 1, gd.first.vertices - 1));
+			break;
+		default:
+			throw std::logic_error("Unknown graph type");
 		}
 	}
 	return result;
 }
 
-bool operator==(const graph_data& lhs, const graph_data& rhs)
+bool operator==(const graph_data & lhs, const graph_data & rhs)
 {
 	return lhs.type == rhs.type && lhs.vertices == rhs.vertices;
 }
 
-bool operator<(const graph_data& lhs, const graph_data& rhs)
+bool operator<(const graph_data & lhs, const graph_data & rhs)
 {
 	return lhs.type < rhs.type ||
 		lhs.type == rhs.type && lhs.vertices < rhs.vertices;
 }
 
-expression operator+(const expression& lhs, const expression& rhs)
+expression operator+(const expression & lhs, const expression & rhs)
 {
 	// TODO: implement
 	return expression();
 }
 
-std::ostream& operator<<(std::ostream& stream, const expression& expr)
+std::ostream& operator<<(std::ostream & stream, const expression & expr)
 {
 	std::string str;
 	for (const auto& gd : expr.get_sum())
@@ -66,13 +76,21 @@ std::ostream& operator<<(std::ostream& stream, const expression& expr)
 		}
 		if (gd.second > 1)
 		{
-			str += gd.second + "*";
+			str += std::to_string(gd.second) + "*";
 		}
 		switch (gd.first.type)
 		{
 		case graph_type::complete:
 			str += "x!/(x-" + std::to_string(gd.first.vertices) + ")!";
 			break;
+		case graph_type::tree:
+			str += "x(x-1)^(" + std::to_string(gd.first.vertices) + "-1)";
+			break;
+		case graph_type::empty:
+			str += "x^" + std::to_string(gd.first.vertices);
+			break;
+		default:
+			throw std::logic_error("Unknown graph type");
 		}
 	}
 	stream << str;

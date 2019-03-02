@@ -25,10 +25,10 @@ public:
 
 	int evaluate(int x) const;
 
-	const auto& get_sum() const { return sum; }
+	const auto& get_sum() const { return sum_; }
 
 private:
-	std::map<graph_data, int> sum;
+	std::map<graph_data, int> sum_;
 };
 
 bool operator==(const graph_data& lhs, const graph_data& rhs);
