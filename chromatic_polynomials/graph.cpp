@@ -83,7 +83,7 @@ bool graph::is_tree() const
 {
 	// TODO: is there are several link components, we can't be sure there is no loops (not all edges will be traversed)
 	const auto first_vertex = 0;
-	std::vector<bool> vertices_reached(count_vertices());
+	std::vector<char> vertices_reached(count_vertices(), not_reached);
 	return is_tree_impl(vertices_reached, first_vertex);
 }
 
@@ -139,31 +139,34 @@ expression graph::calculate_chromatic_polynomial_impl() const
 	return expr;
 }
 
-bool graph::is_tree_impl(std::vector<bool> & vertices_reached, int current_vertex) const
+bool graph::is_tree_impl(std::vector<char> & vertices_reached, const int current_vertex) const
 {
-	if (vertices_reached[current_vertex])
+	if (vertices_reached[current_vertex] == explored)
 	{
 		return false;
 	}
-	vertices_reached[current_vertex] = true;
-	for (auto vertex = current_vertex + 1, vertices = count_vertices(); vertex < vertices; vertex++)
+	vertices_reached[current_vertex] = reached;
+	for (auto vertex = 0, vertices = count_vertices(); vertex < vertices; ++vertex)
 	{
-		if (has_edge(current_vertex, vertex) && !is_tree_impl(vertices_reached, vertex))
+		if (has_edge(current_vertex, vertex)
+			&& vertices_reached[vertex] != reached
+			&& !is_tree_impl(vertices_reached, vertex))
 		{
 			return false;
 		}
 	}
+	vertices_reached[current_vertex] = explored;
 	return true;
 }
 
-graph graph::create_g_plus(int vertex1, int vertex2) const
+graph graph::create_g_plus(const int vertex1, const int vertex2) const
 {
 	graph g = *this;
 	g.add_edge(vertex1, vertex2);
 	return g;
 }
 
-graph graph::create_g_minus(int vertex1, int vertex2) const
+graph graph::create_g_minus(const int vertex1, const int vertex2) const
 {
 	graph g = *this;
 	g.merge_vertices(vertex1, vertex2);
