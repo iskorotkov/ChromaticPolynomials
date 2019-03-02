@@ -90,7 +90,7 @@ std::ostream& operator<<(std::ostream & stream, const expression & expr)
 			str += "x!/(x-" + std::to_string(gd.first.vertices) + ")!";
 			break;
 		case graph_type::tree:
-			str += "x(x-1)^(" + std::to_string(gd.first.vertices) + "-1)";
+			str += "x(x-1)^" + std::to_string(gd.first.vertices - 1);
 			break;
 		case graph_type::empty:
 			str += "x^" + std::to_string(gd.first.vertices);
