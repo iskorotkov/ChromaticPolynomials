@@ -2,6 +2,7 @@
 #include <cassert>
 #include <algorithm>
 #include <ostream>
+#include <algorithm>
 
 graph::graph(const int vertices)
 {
@@ -81,10 +82,11 @@ bool graph::is_complete() const
 
 bool graph::is_tree() const
 {
-	// TODO: is there are several link components, we can't be sure there is no loops (not all edges will be traversed)
 	const auto first_vertex = 0;
 	std::vector<char> vertices_reached(count_vertices(), not_reached);
-	return is_tree_impl(vertices_reached, first_vertex);
+	const auto no_cycles = is_tree_impl(vertices_reached, first_vertex);
+	const auto all_vertices_reached = std::find(vertices_reached.cbegin(), vertices_reached.cend(), not_reached) == vertices_reached.cend();
+	return no_cycles && all_vertices_reached;
 }
 
 bool graph::has_edges() const
