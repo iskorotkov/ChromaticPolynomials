@@ -1,4 +1,5 @@
 #include "expression.h"
+#include "string"
 
 void expression::add_complete(const int vertices)
 {
@@ -24,7 +25,7 @@ int expression::evaluate(const int x) const
 	auto result = 0;
 	for (const auto& gd : sum_)
 	{
-		auto accumulator = 1;
+		auto accumulator = gd.second;
 		switch (gd.first.type)
 		{
 		case graph_type::complete:
@@ -33,17 +34,17 @@ int expression::evaluate(const int x) const
 			{
 				accumulator *= x - i;
 			}
-			result += accumulator;
 			break;
 		case graph_type::empty:
-			result += static_cast<int>(std::pow(x, gd.first.vertices));
+			accumulator *= static_cast<int>(std::pow(x, gd.first.vertices));
 			break;
 		case graph_type::tree:
-			result += x * static_cast<int>(std::pow(x - 1, gd.first.vertices - 1));
+			accumulator *= x * static_cast<int>(std::pow(x - 1, gd.first.vertices - 1));
 			break;
 		default:
 			throw std::logic_error("Unknown graph type");
 		}
+		result += accumulator;
 	}
 	return result;
 }
@@ -61,14 +62,19 @@ bool operator<(const graph_data & lhs, const graph_data & rhs)
 
 expression operator+(const expression & lhs, const expression & rhs)
 {
-	// TODO: implement
-	return expression();
+	expression result;
+	result.sum_.insert(lhs.sum_.cbegin(), lhs.sum_.cend());
+	for (const auto& gd : rhs.sum_)
+	{
+		result.sum_[gd.first] += gd.second;
+	}
+	return result;
 }
 
 std::ostream& operator<<(std::ostream & stream, const expression & expr)
 {
 	std::string str;
-	for (const auto& gd : expr.get_sum())
+	for (const auto& gd : expr.sum_)
 	{
 		if (!str.empty())
 		{

@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include <ostream>
 #include <map>
 
@@ -18,14 +17,14 @@ struct graph_data
 
 class expression
 {
+	friend std::ostream& operator<<(std::ostream& stream, const expression& expr);
+	friend expression operator+(const expression& lhs, const expression& rhs);
 public:
 	void add_complete(int vertices);
 	void add_tree(int vertices);
 	void add_empty(int vertices);
 
 	int evaluate(int x) const;
-
-	const auto& get_sum() const { return sum_; }
 
 private:
 	std::map<graph_data, int> sum_;
