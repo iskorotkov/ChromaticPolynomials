@@ -36,18 +36,18 @@ void graph::merge_vertices(const int vertex1, const int vertex2)
 expression graph::calculate_chromatic_polynomial() const
 {
 	expression expr;
+	// TODO: check for tree structure or edges absence only for original graph; if original graph doesn't meet conditions, other graphs won't either
 	if (is_tree())
 	{
-		expr.multiply(0);
-		expr.multiply(-1, count_vertices() - 1);
+		expr.add_tree(count_vertices());
 	}
 	else if (is_complete())
 	{
-		expr.multiply_by_factorial(-count_vertices() + 1, 0);
+		expr.add_complete(count_vertices());
 	}
 	else if (!has_edges())
 	{
-		expr.multiply(0, count_vertices());
+		expr.add_empty(count_vertices());
 	}
 	else
 	{
@@ -90,6 +90,7 @@ bool graph::is_complete() const
 
 bool graph::is_tree() const
 {
+	// TODO: is there are several link components, we can't be sure there is no loops (not all edges will be traversed)
 	const auto first_vertex = 0;
 	std::vector<bool> vertices_reached(count_vertices());
 	return is_tree_impl(vertices_reached, first_vertex);
