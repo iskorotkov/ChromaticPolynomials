@@ -36,14 +36,9 @@ void graph::merge_vertices(const int vertex1, const int vertex2)
 expression graph::calculate_chromatic_polynomial() const
 {
 	expression expr;
-	// TODO: check for tree structure or edges absence only for original graph; if original graph doesn't meet conditions, other graphs won't either
 	if (is_tree())
 	{
 		expr.add_tree(count_vertices());
-	}
-	else if (is_complete())
-	{
-		expr.add_complete(count_vertices());
 	}
 	else if (!has_edges())
 	{
@@ -51,11 +46,7 @@ expression graph::calculate_chromatic_polynomial() const
 	}
 	else
 	{
-		const auto [first, second] = get_two_unrelated_vertices();
-		// TODO: avoid copying adjustment matrix twice - copy only once and reuse this graph for second call
-		auto g_minus = create_g_minus(first, second);
-		auto g_plus = create_g_plus(first, second);
-		expr = g_minus.calculate_chromatic_polynomial() + g_plus.calculate_chromatic_polynomial();
+		expr = calculate_chromatic_polynomial_impl();
 	}
 	return expr;
 }
@@ -127,6 +118,25 @@ void graph::remove_vertex(int vertex)
 {
 	vertices_data_.erase(vertices_data_.begin() + vertex);
 	std::for_each(vertices_data_.begin(), vertices_data_.end(), [vertex](auto & vec) { vec.erase(vec.begin() + vertex); });
+}
+
+expression graph::calculate_chromatic_polynomial_impl() const
+{
+	expression expr;
+	if (is_complete())
+	{
+		expr.add_complete(count_vertices());
+	}
+	else
+	{
+		const auto [first, second] = get_two_unrelated_vertices();
+		// TODO: avoid copying adjustment matrix twice - copy only once and reuse this graph for second call
+		// This method is const, its called by const method calculate_chromatic_polynomial(), so it isn't trivial to change behavior here
+		auto g_minus = create_g_minus(first, second);
+		auto g_plus = create_g_plus(first, second);
+		expr = g_minus.calculate_chromatic_polynomial() + g_plus.calculate_chromatic_polynomial();
+	}
+	return expr;
 }
 
 bool graph::is_tree_impl(std::vector<bool> & vertices_reached, int current_vertex) const

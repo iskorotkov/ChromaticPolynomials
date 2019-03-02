@@ -26,6 +26,8 @@ private:
 
 	void remove_vertex(int vertex);
 
+	expression calculate_chromatic_polynomial_impl() const;
+
 	bool is_tree_impl(std::vector<bool>& vertices_reached, int current_vertex) const;
 
 	graph create_g_plus(int vertex1, int vertex2) const;
