@@ -21,7 +21,6 @@ void expression::add_empty(int vertices)
 
 int expression::evaluate(const int x) const
 {
-	// TODO: check for x that is less than chromatic number of the graph
 	auto result = 0;
 	for (const auto& gd : sum_)
 	{
@@ -29,7 +28,6 @@ int expression::evaluate(const int x) const
 		switch (gd.first.type)
 		{
 		case graph_type::complete:
-			// TODO: use factorial function
 			for (auto i = 0; i < gd.first.vertices; i++)
 			{
 				accumulator *= x - i;
