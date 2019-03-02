@@ -14,7 +14,7 @@ void print(T param = "", const std::string& message = "")
 
 std::pair<graph, int> read_graph()
 {
-	const auto input_file = "input.txt";
+	const std::string input_file = "input.txt";
 	std::ifstream input(input_file);
 	auto dimension = 0;
 	input >> dimension;
@@ -36,12 +36,22 @@ std::pair<graph, int> read_graph()
 	return std::make_pair(g, x);
 }
 
+void write_result(const graph& g, int x)
+{
+	const std::string output_file = "output.txt";
+	std::ofstream output(output_file);
+	const auto result = g.calculate_chromatic_polynomial();
+	output << result << std::endl << result.evaluate(x);
+}
+
 int main()
 {
 	auto [g, x] = read_graph();
 	std::cout << g;
 	print(g.is_complete(), "Complete Graph? ");
 	print(g.is_tree(), "Tree? ");
-	print(g.calculate_chromatic_polynomial(), "Chromatic polynomial: ");
-	print(g.calculate_chromatic_polynomial().evaluate(x), "Chromatic number: ");
+	const auto result = g.calculate_chromatic_polynomial();
+	print(result, "Chromatic polynomial: ");
+	print(result.evaluate(x), "Chromatic number: ");
+	write_result(g, x);
 }
