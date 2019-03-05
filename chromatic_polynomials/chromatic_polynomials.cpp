@@ -46,7 +46,9 @@ void write_result(const graph& g, int x)
 
 int main()
 {
-	const auto [g, x] = read_graph();
+	const auto p = read_graph();
+	const auto g = p.first;
+	const auto x = p.second;
 	std::cout << g;
 	print(g.is_complete(), "Complete Graph? ");
 	print(g.is_tree(), "Tree? ");

@@ -15,8 +15,8 @@ void graph::add_edge(const int vertex1, const int vertex2)
 	assert(has_vertex(vertex1));
 	assert(has_vertex(vertex2));
 
-	vertices_data_[vertex1][vertex2] = true;
-	vertices_data_[vertex2][vertex1] = true;
+	vertices_data_.at(vertex1).at(vertex2) = true;
+	vertices_data_.at(vertex2).at(vertex1) = true;
 }
 
 void graph::merge_vertices(const int vertex1, const int vertex2)
@@ -47,7 +47,8 @@ expression graph::calculate_chromatic_polynomial() const
 	}
 	else
 	{
-		expr = calculate_chromatic_polynomial_impl();
+		auto copy = *this;
+		expr = copy.calculate_chromatic_polynomial_impl();
 	}
 	return expr;
 }
@@ -122,7 +123,7 @@ void graph::remove_vertex(int vertex)
 	std::for_each(vertices_data_.begin(), vertices_data_.end(), [vertex](auto & vec) { vec.erase(vec.begin() + vertex); });
 }
 
-expression graph::calculate_chromatic_polynomial_impl() const
+expression graph::calculate_chromatic_polynomial_impl()
 {
 	expression expr;
 	if (is_complete())
@@ -131,12 +132,12 @@ expression graph::calculate_chromatic_polynomial_impl() const
 	}
 	else
 	{
-		const auto [first, second] = get_two_unrelated_vertices();
-		// TODO: avoid copying adjustment matrix twice - copy only once and reuse this graph for second call
-		// This method is const, its called by const method calculate_chromatic_polynomial(), so it isn't trivial to change behavior here
-		auto g_minus = create_g_minus(first, second);
+		const auto p = get_two_unrelated_vertices();
+		const auto first = p.first;
+		const auto second = p.second;
 		auto g_plus = create_g_plus(first, second);
-		expr = g_minus.calculate_chromatic_polynomial() + g_plus.calculate_chromatic_polynomial();
+		merge_vertices(first, second);
+		expr = calculate_chromatic_polynomial_impl() + g_plus.calculate_chromatic_polynomial_impl();
 	}
 	return expr;
 }

@@ -69,6 +69,14 @@ expression operator+(const expression & lhs, const expression & rhs)
 	return result;
 }
 
+void operator+=(expression & lhs, const expression & rhs)
+{
+	for (const auto& gd : rhs.sum_)
+	{
+		lhs.sum_[gd.first] += gd.second;
+	}
+}
+
 std::ostream& operator<<(std::ostream & stream, const expression & expr)
 {
 	std::string str;
