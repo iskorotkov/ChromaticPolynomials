@@ -93,13 +93,25 @@ std::ostream& operator<<(std::ostream & stream, const expression & expr)
 		switch (gd.first.type)
 		{
 		case graph_type::complete:
-			str += "x!/(x-" + std::to_string(gd.first.vertices) + ")!";
+			str += "x";
+			for (auto i = 1; i < gd.first.vertices; ++i)
+			{
+				str += "*(x-" + std::to_string(i) + ")";
+			}
 			break;
 		case graph_type::tree:
-			str += "x(x-1)^" + std::to_string(gd.first.vertices - 1);
+			str += "x";
+			for (auto i = 0; i < gd.first.vertices - 1; ++i)
+			{
+				str += "*(x-1)";
+			}
 			break;
 		case graph_type::empty:
-			str += "x^" + std::to_string(gd.first.vertices);
+			str += "x";
+			for (auto i = 0; i < gd.first.vertices - 1; ++i)
+			{
+				str += "*x";
+			}
 			break;
 		default:
 			throw std::logic_error("Unknown graph type");

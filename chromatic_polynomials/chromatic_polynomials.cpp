@@ -1,16 +1,6 @@
-// chromatic_polynomials.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
-#include <iostream>
 #include "graph.h"
 #include "expression.h"
 #include <fstream>
-
-template <typename T>
-void print(T param = "", const std::string& message = "")
-{
-	std::cout << message << param << std::endl;
-}
 
 std::pair<graph, int> read_graph()
 {
@@ -49,11 +39,5 @@ int main()
 	const auto p = read_graph();
 	const auto g = p.first;
 	const auto x = p.second;
-	std::cout << g;
-	print(g.is_complete(), "Complete Graph? ");
-	print(g.is_tree(), "Tree? ");
-	const auto result = g.calculate_chromatic_polynomial();
-	print(result, "Chromatic polynomial: ");
-	print(result.evaluate(x), "Chromatic number: ");
 	write_result(g, x);
 }
