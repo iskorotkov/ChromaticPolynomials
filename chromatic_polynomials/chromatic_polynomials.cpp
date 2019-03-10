@@ -1,6 +1,8 @@
 #include "graph.h"
 #include "expression.h"
 #include <fstream>
+#include <iostream>
+#include <chrono>
 
 std::pair<graph, int> read_graph()
 {
@@ -34,10 +36,27 @@ void write_result(const graph& g, int x)
 	output << result << std::endl << result.evaluate(x);
 }
 
-int main()
+void normal_launch()
 {
 	const auto p = read_graph();
 	const auto g = p.first;
 	const auto x = p.second;
 	write_result(g, x);
+}
+
+void performance_test(const int iterations = 1000)
+{
+	const auto start = std::chrono::high_resolution_clock::now();
+	for (auto i = 0; i < iterations; ++i)
+	{
+		normal_launch();
+	}
+	const auto end = std::chrono::high_resolution_clock::now();
+	std::cout << std::chrono::duration_cast<std::chrono::milliseconds>((end - start) / iterations).count() << " ms";
+}
+
+int main()
+{
+	//performance_test(20);
+	normal_launch();
 }
