@@ -11,7 +11,7 @@ void expression::add_tree(const int vertices)
 	++sum_[{ graph_type::tree, vertices }];
 }
 
-void expression::add_empty(int vertices)
+void expression::add_empty(const int vertices)
 {
 	++sum_[{ graph_type::empty, vertices }];
 }
