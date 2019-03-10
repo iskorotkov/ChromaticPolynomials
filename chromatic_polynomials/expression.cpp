@@ -3,20 +3,17 @@
 
 void expression::add_complete(const int vertices)
 {
-	graph_data g = { graph_type::complete, vertices };
-	++sum_[g];
+	++sum_[{ graph_type::complete, vertices }];
 }
 
 void expression::add_tree(const int vertices)
 {
-	graph_data g = { graph_type::tree, vertices };
-	++sum_[g];
+	++sum_[{ graph_type::tree, vertices }];
 }
 
 void expression::add_empty(int vertices)
 {
-	graph_data g = { graph_type::empty, vertices };
-	++sum_[g];
+	++sum_[{ graph_type::empty, vertices }];
 }
 
 int expression::evaluate(const int x) const
