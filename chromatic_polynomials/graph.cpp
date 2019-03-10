@@ -2,8 +2,6 @@
 #include <algorithm>
 #include <ostream>
 #include <algorithm>
-#define NDEBUG
-#include <cassert>
 
 graph::graph(const int vertices)
 {
@@ -12,9 +10,6 @@ graph::graph(const int vertices)
 
 void graph::add_edge(const int vertex1, const int vertex2)
 {
-	assert(has_vertex(vertex1));
-	assert(has_vertex(vertex2));
-
 	vertices_data_.at(vertex1).at(vertex2) = true;
 	vertices_data_.at(vertex2).at(vertex1) = true;
 }
@@ -104,14 +99,7 @@ bool graph::has_edges() const
 
 bool graph::has_edge(const int vertex1, const int vertex2) const
 {
-	assert(has_vertex(vertex1));
-	assert(has_vertex(vertex2));
 	return vertices_data_[vertex1][vertex2];
-}
-
-bool graph::has_vertex(const int vertex) const
-{
-	return vertex >= 0 && vertex < count_vertices();
 }
 
 void graph::remove_vertex(const int vertex)
@@ -162,13 +150,6 @@ graph graph::create_g_plus(const int vertex1, const int vertex2) const
 {
 	graph g = *this;
 	g.add_edge(vertex1, vertex2);
-	return g;
-}
-
-graph graph::create_g_minus(const int vertex1, const int vertex2) const
-{
-	graph g = *this;
-	g.merge_vertices(vertex1, vertex2);
 	return g;
 }
 
