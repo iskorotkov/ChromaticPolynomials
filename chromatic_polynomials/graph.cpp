@@ -48,7 +48,7 @@ expression graph::calculate_chromatic_polynomial() const
 	else
 	{
 		auto copy = *this;
-		expr = copy.calculate_chromatic_polynomial_impl();
+		copy.calculate_chromatic_polynomial_impl(expr);
 	}
 	return expr;
 }
@@ -123,9 +123,8 @@ void graph::remove_vertex(int vertex)
 	std::for_each(vertices_data_.begin(), vertices_data_.end(), [vertex](auto & vec) { vec.erase(vec.begin() + vertex); });
 }
 
-expression graph::calculate_chromatic_polynomial_impl()
+void graph::calculate_chromatic_polynomial_impl(expression & expr)
 {
-	expression expr;
 	if (is_complete())
 	{
 		expr.add_complete(count_vertices());
@@ -137,9 +136,9 @@ expression graph::calculate_chromatic_polynomial_impl()
 		const auto second = p.second;
 		auto g_plus = create_g_plus(first, second);
 		merge_vertices(first, second);
-		expr = calculate_chromatic_polynomial_impl() + g_plus.calculate_chromatic_polynomial_impl();
+		calculate_chromatic_polynomial_impl(expr);
+		g_plus.calculate_chromatic_polynomial_impl(expr);
 	}
-	return expr;
 }
 
 bool graph::is_tree_impl(std::vector<char> & vertices_reached, const int current_vertex) const

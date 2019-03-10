@@ -58,25 +58,6 @@ bool operator<(const graph_data & lhs, const graph_data & rhs)
 		lhs.type == rhs.type && lhs.vertices < rhs.vertices;
 }
 
-expression operator+(const expression & lhs, const expression & rhs)
-{
-	expression result;
-	result.sum_.insert(lhs.sum_.cbegin(), lhs.sum_.cend());
-	for (const auto& gd : rhs.sum_)
-	{
-		result.sum_[gd.first] += gd.second;
-	}
-	return result;
-}
-
-void operator+=(expression & lhs, const expression & rhs)
-{
-	for (const auto& gd : rhs.sum_)
-	{
-		lhs.sum_[gd.first] += gd.second;
-	}
-}
-
 std::ostream& operator<<(std::ostream & stream, const expression & expr)
 {
 	std::string str;

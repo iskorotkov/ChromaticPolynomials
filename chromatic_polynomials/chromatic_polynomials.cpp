@@ -57,6 +57,6 @@ void performance_test(const int iterations = 1000)
 
 int main()
 {
-	//performance_test(20);
-	normal_launch();
+	performance_test(20);
+	//normal_launch();
 }

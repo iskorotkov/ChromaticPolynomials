@@ -32,8 +32,7 @@ private:
 	std::vector<std::vector<bool>> vertices_data_;
 
 	void remove_vertex(int vertex);
-
-	expression calculate_chromatic_polynomial_impl();
+	void calculate_chromatic_polynomial_impl(expression& expr);
 
 	bool is_tree_impl(std::vector<char>& vertices_reached, int current_vertex) const;
 

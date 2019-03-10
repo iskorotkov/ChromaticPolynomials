@@ -18,8 +18,6 @@ struct graph_data
 class expression
 {
 	friend std::ostream& operator<<(std::ostream& stream, const expression& expr);
-	friend expression operator+(const expression& lhs, const expression& rhs);
-	friend void operator+=(expression& lhs, const expression& rhs);
 public:
 	void add_complete(int vertices);
 	void add_tree(int vertices);
@@ -32,11 +30,6 @@ private:
 };
 
 bool operator==(const graph_data& lhs, const graph_data& rhs);
-
 bool operator<(const graph_data& lhs, const graph_data& rhs);
-
-expression operator+(const expression& lhs, const expression& rhs);
-
-void operator+=(expression& lhs, const expression& rhs);
 
 std::ostream& operator<<(std::ostream& stream, const expression& expr);
