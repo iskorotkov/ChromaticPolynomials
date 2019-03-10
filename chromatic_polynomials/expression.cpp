@@ -62,7 +62,7 @@ std::ostream& operator<<(std::ostream & stream, const expression & expr)
 	{
 		if (!str.empty())
 		{
-			str += " + ";
+			str += "+";
 		}
 		if (gd.second > 1)
 		{
